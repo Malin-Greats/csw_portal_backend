@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Certificate of Registration 
+      of a Social Worker</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+
+  <body>
+    <div id="pspdfkit-header">
+      <img class="logo" src="logo.svg" />
+      <p>Company</p>
+    </div>
+
+    <div class="border"></div>
+    <div class="page" style="page-break-after: always">
+      <div>
+        <h1>
+          Certificate of Registration<br />
+          of a Social Worker
+        </h1>
+        <p>Social Workers Act: (27:21)</p>
+      </div>
+
+      <div class="form">
+        <label for="name" class="label">
+          This is to certify that:<br />
+          {% myname %}
+        </label>
+        <input type="text" id="name" class="border-bottom" value="John Appleseed" />
+      </div>
+
+      <div>
+        <p>was on this _________ day of ___________________ 20_____registered 
+          as a Social Worker, in terms of the Social Workers Act (Chapter 27:21), 
+          and is accordingly entitled to all rights and privileges, and is charged with 
+          all the responsibilities relating to the practice of the social work profession.</p>
+      </div>
+
+      <div class="signer">
+        <div class="form signer-item">
+          <label for="date" class="label">Date:</label>
+          <input type="text" id="date" class="border-bottom" value="01/01/2021" />
+        </div>
+
+        <img class="form signer-item" src="ribbon.svg" />
+
+        <div class="form signer-item">
+          <label for="signature" class="label">Issued by:</label>
+          <img class="form signer-item" src="ribbon.svg" />
+          <p>(Chairperson) <br />
+            Council of Social Workers Zimbabwe
+          </p>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
