@@ -26,11 +26,12 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod
     def get_token(cls, user):
         token = super().get_token(user)
+        member = MemberProfile.objects.get(user=user)
 
         # custom claims
         token['username'] = user.username
         token['email'] = user.email
-        token['id'] = user.id
+        token['member_number'] = member.member_number
         token['is_staff'] = user.is_staff
 
         # token['profile_image'] = user.profile.profile_image
@@ -63,20 +64,20 @@ def member_profile_list(request):
         serializer = MemberProfileSerializer(qs, many=True)
         return Response(serializer.data)
 
-# GET MEMBER BY ID
+# GET MEMBER BY member_number
 
 
 @api_view(['GET'])
-def member_profile_detail(request, pk):
+def member_profile_detail(request, member_number):
     if request.method == 'GET':
-        qs = MemberProfile.objects.get(id=pk)
+        qs = MemberProfile.objects.get(member_number=member_number)
         serializer = MemberProfileSerializer(qs)
         return Response(serializer.data)
 
 @api_view(['GET'])
-def member_certificate_gen(request, pk):
+def member_certificate_gen(request, member_number):
     if request.method == 'GET':
-        qs = MemberProfile.objects.get(id=pk)
+        qs = MemberProfile.objects.get(member_number=member_number)
         name = str(qs.first_name + ' ' + qs.last_name)
         registration_certificate_picture = single_certificate_gen(name)
         print('registration_certificate_picture')
@@ -87,9 +88,9 @@ def member_certificate_gen(request, pk):
         return Response(serializer.data)
 
 @api_view(['GET'])
-def member_confirm_payment(request, pk):
+def member_confirm_payment(request, member_number):
     if request.method == 'GET':
-        member_profile = MemberProfile.objects.get(id=pk)
+        member_profile = MemberProfile.objects.get(member_number=member_number)
         member_profile.payment_confirmed = True
         member_profile.save()
         serializer = MemberProfileSerializer(member_profile)
@@ -104,11 +105,11 @@ def member_address_list(request):
         return Response(serializer.data)
 
 
-# GET ADDRESS BY ID
+# GET ADDRESS BY member_number
 @api_view(['GET'])
-def member_address_detail(request, pk):
+def member_address_detail(request, member_number):
     if request.method == 'GET':
-        qs = AuthorAddress.objects.get(id=pk)
+        qs = AuthorAddress.objects.get(member_number=member_number)
         serializer = AuthorAddressSerializer(qs)
         return Response(serializer.data)
 
@@ -130,15 +131,15 @@ def addApplicationApproval(request):
     if serializer.is_valid():
         serializer.save()
     else:
-        return Response('serializer not valid')
+        return Response('serializer not valmember_number')
     return Response(serializer.data)
 
 
-# GET BOOK PAYEE BY ID
+# GET BOOK PAYEE BY member_number
 @api_view(['GET'])
-def application_payee_detail(request, pk):
+def application_payee_detail(request, member_number):
     if request.method == 'GET':
-        qs = ApplicationPayee.objects.get(id=pk)
+        qs = ApplicationPayee.objects.get(member_number=member_number)
         serializer = ApplicationPayeeSerializer(qs)
         return Response(serializer.data)
 
@@ -152,11 +153,11 @@ def application_approval_list(request):
         return Response(serializer.data)
 
 
-# GET BOOK UNDER PUBLISH BY ID
+# GET BOOK UNDER PUBLISH BY member_number
 @api_view(['GET'])
-def application_approval_detail(request, pk):
+def application_approval_detail(request, member_number):
     if request.method == 'GET':
-        qs = ApplicationApproval.objects.get(id=pk)
+        qs = ApplicationApproval.objects.get(member_number=member_number)
         serializer = ApplicationApprovalSerializer(qs)
         return Response(serializer.data)
 
@@ -170,20 +171,20 @@ def application_review_list(request):
         return Response(serializer.data)
 
 
-# GET A REVIEW BY ID
+# GET A REVIEW BY member_number
 @api_view(['GET'])
-def application_review_detail(request, pk):
+def application_review_detail(request, member_number):
     if request.method == 'GET':
-        qs = ApplicationReview.objects.get(id=pk)
+        qs = ApplicationReview.objects.get(member_number=member_number)
         serializer = ApplicationReviewSerializer(qs)
         return Response(serializer.data)
 
 
-# GET STORE BOOK BY ID
+# GET STORE BOOK BY member_number
 @api_view(['GET'])
-def store_application_detail(request, pk):
+def store_application_detail(request, member_number):
     if request.method == 'GET':
-        qs = StoreApplication.objects.get(id=pk)
+        qs = StoreApplication.objects.get(member_number=member_number)
         serializer = StoreApplicationSerializer(qs)
         return Response(serializer.data)
 
@@ -195,21 +196,24 @@ def store_application_detail(request, pk):
 ##### MEMBER APP PATCH REQUESTS #####
 
 class MemberProfileUpdate(APIView):
-    def patch(self, request, pk):
-        member_profile = MemberProfile.objects.get(id=pk)
+    def patch(self, request, member_number):
+        member_profile = MemberProfile.objects.get(member_number=member_number)
         data = request.data
 
-        member_profile.name = data.get('name', member_profile.name)
-        member_profile.email = data.get('email', member_profile.email)
-        member_profile.phone = data.get('phone', member_profile.phone)
+        member_profile.first_name = data.get('first_name', member_profile.first_name)
+        member_profile.last_name = data.get('last_name', member_profile.last_name)
+        member_profile.nationalID = data.get('nationalID', member_profile.nationalID)
+        member_profile.nationality = data.get('nationality', member_profile.nationality)
+        member_profile.dob = data.get('dob', member_profile.dob)
+        member_profile.gender = data.get('gender', member_profile.gender)
 
         member_profile.save()
         serializer = MemberProfileSerializer(member_profile)
         return Response(serializer.data)
 
 class MemberPaymentUpdate(APIView):
-    def patch(self, request, pk):
-        member_profile = MemberProfile.objects.get(id=pk)
+    def patch(self, request, member_number):
+        member_profile = MemberProfile.objects.get(member_number=member_number)
         data = request.data
 
         member_profile.payment_confirmed = True
@@ -218,12 +222,14 @@ class MemberPaymentUpdate(APIView):
         serializer = MemberProfileSerializer(member_profile)
         return Response(serializer.data)
 class MemberProfilePictureUpdate(APIView):
-    def patch(self, request, pk):
-        member_profile = MemberProfile.objects.get(id=pk)
+    def patch(self, request, member_number):
+        member_profile = MemberProfile.objects.get(member_number=member_number)
         data = request.data
+        print('data image')
+        print(data)
 
         member_profile.profile_picture = data.get(
-            'profile_picture', member_profile.profile_picture)
+            'image_url', member_profile.profile_picture)
 
         member_profile.save()
         serializer = MemberProfileSerializer(member_profile)
@@ -231,8 +237,8 @@ class MemberProfilePictureUpdate(APIView):
 
 
 class MemberAddressUpdate(APIView):
-    def patch(self, request, pk):
-        member_address = AuthorAddress.objects.get(id=pk)
+    def patch(self, request, member_number):
+        member_address = AuthorAddress.objects.get(member_number=member_number)
         data = request.data
 
         member_address.building = data.get('building', member_address.building)
@@ -250,8 +256,8 @@ class MemberAddressUpdate(APIView):
 
 
 class ApplicationPayeeUpdate(APIView):
-    def patch(self, request, pk):
-        application_payee = ApplicationPayee.objects.get(id=pk)
+    def patch(self, request, member_number):
+        application_payee = ApplicationPayee.objects.get(member_number=member_number)
         data = request.data
 
         application_payee.first_name = data.get('first_name', application_payee.first_name)
@@ -269,8 +275,8 @@ class ApplicationPayeeUpdate(APIView):
 
 
 class ApplicationReviewUpdate(APIView):
-    def patch(self, request, pk):
-        application_review = ApplicationReview.objects.get(id=pk)
+    def patch(self, request, member_number):
+        application_review = ApplicationReview.objects.get(member_number=member_number)
         data = request.data
 
         application_review.name = data.get('name', application_review.name)
@@ -286,8 +292,8 @@ class ApplicationReviewUpdate(APIView):
         return Response(serializer.data)
 
 class ApplicationApprovalUpdate(APIView):
-    def patch(self, request, pk):
-        application_approval = ApplicationApproval.objects.get(id=pk)
+    def patch(self, request, member_number):
+        application_approval = ApplicationApproval.objects.get(member_number=member_number)
         data = request.data
 
         application_approval.title = data.get('title', application_approval.title)
@@ -333,28 +339,28 @@ class ApplicationApprovalUpdate(APIView):
 
 
 @api_view(['DELETE'])
-def delete_member_profile(request, pk):
-    member_profile = MemberProfile.objects.get(id=pk)
+def delete_member_profile(request, member_number):
+    member_profile = MemberProfile.objects.get(member_number=member_number)
     member_profile.delete()
     return Response('Author profile deleted successfully')
 
 
 @api_view(['DELETE'])
-def delete_member_address(request, pk):
-    member_address = AuthorAddress.objects.get(id=pk)
+def delete_member_address(request, member_number):
+    member_address = AuthorAddress.objects.get(member_number=member_number)
     member_address.delete()
     return Response('Author address deleted successfully')
 
 @api_view(['DELETE'])
-def delete_application_payee(request, pk):
-    application_payee = ApplicationPayee.objects.get(id=pk)
+def delete_application_payee(request, member_number):
+    application_payee = ApplicationPayee.objects.get(member_number=member_number)
     application_payee.delete()
     return Response('Application payee deleted successfully')
 
 
 @api_view(['DELETE'])
-def delete_application_review(request, pk):
-    application_review = ApplicationReview.objects.get(id=pk)
+def delete_application_review(request, member_number):
+    application_review = ApplicationReview.objects.get(member_number=member_number)
     application_review.delete()
     return Response('Application review deleted successfully')
 

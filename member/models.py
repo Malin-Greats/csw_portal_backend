@@ -15,11 +15,18 @@ def upload_to(instance, filename):
 
 # MEMBER'S PROFILE MODEL
 class MemberProfile(models.Model):
+    member_number = models.CharField(max_length=100)
+    member_registra_number = models.CharField(max_length=100)
+    member_registra_renewal = models.CharField(max_length=100)
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     first_name = models.CharField(max_length=200, blank=True, null=True)
     last_name = models.CharField(max_length=200, blank=True, null=True)
     email = models.EmailField(max_length=150)
     phone = models.CharField(max_length=100)
+    nationalID = models.CharField(max_length=100, blank=True, null=True)
+    nationality = models.CharField(max_length=100, blank=True, null=True)
+    dob = models.CharField(max_length=100, blank=True, null=True)
+    gender = models.CharField(max_length=100, blank=True, null=True)
     profile_picture = models.ImageField(
         upload_to=upload_to, blank=True, null=True)
     registration_certificate_picture = models.ImageField(
@@ -32,8 +39,8 @@ class MemberProfile(models.Model):
     is_banned = models.BooleanField(default=False)
     payment_confirmed = models.BooleanField(default=False)
 
-    def __str__(self):
-        return self.first_name
+    # def __str__(self):
+    #     return self.first_name
 
 # RECEIVER TO TRIGGER CREATION OF PROFILE AFTER NEW USER IS CREATED
 
