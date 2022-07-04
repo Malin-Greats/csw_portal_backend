@@ -27,16 +27,10 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     def get_token(cls, user):
         token = super().get_token(user)
         member = MemberProfile.objects.get(user=user)
-
-        # custom claims
         token['username'] = user.username
         token['email'] = user.email
         token['member_number'] = member.member_number
         token['is_staff'] = user.is_staff
-
-        # token['profile_image'] = user.profile.profile_image
-        # ...
-
         return token
 
 
