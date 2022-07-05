@@ -13,6 +13,7 @@ from datetime import datetime
 from django.contrib.humanize.templatetags.humanize import naturalday
 from django.contrib.humanize.templatetags.humanize import naturaltime
 from pspdfkit.init import single_certificate_gen
+from django.contrib.auth.models import User
 
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
@@ -64,7 +65,10 @@ def member_profile_list(request):
 @api_view(['GET'])
 def member_profile_detail(request, email):
     if request.method == 'GET':
-        qs = MemberProfile.objects.get(email__exact=email)
+        print('str(email)')
+        print(str(email))
+        user = User.objects.get(email=str(email))
+        qs = MemberProfile.objects.get(user=user)
         serializer = MemberProfileSerializer(qs)
         return Response(serializer.data)
 
