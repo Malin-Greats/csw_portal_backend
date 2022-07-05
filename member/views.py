@@ -64,7 +64,7 @@ def member_profile_list(request):
 @api_view(['GET'])
 def member_profile_detail(request, email):
     if request.method == 'GET':
-        qs = MemberProfile.objects.get(email=email)
+        qs = MemberProfile.objects.get(email__exact=email)
         serializer = MemberProfileSerializer(qs)
         return Response(serializer.data)
 
