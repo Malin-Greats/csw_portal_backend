@@ -15,14 +15,14 @@ def upload_to(instance, filename):
 
 # MEMBER'S PROFILE MODEL
 class MemberProfile(models.Model):
-    member_number = models.CharField(max_length=100)
-    member_registra_number = models.CharField(max_length=100)
-    member_registra_renewal = models.CharField(max_length=100)
+    member_number = models.CharField(max_length=100, blank=True, null=True)
+    member_registra_number = models.CharField(max_length=100, blank=True, null=True)
+    member_registra_renewal = models.CharField(max_length=100, blank=True, null=True)
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     first_name = models.CharField(max_length=200, blank=True, null=True)
     last_name = models.CharField(max_length=200, blank=True, null=True)
-    email = models.EmailField(max_length=150)
-    phone = models.CharField(max_length=100)
+    email = models.EmailField(max_length=150, blank=True, null=True)
+    phone = models.CharField(max_length=100, blank=True, null=True)
     nationalID = models.CharField(max_length=100, blank=True, null=True)
     nationality = models.CharField(max_length=100, blank=True, null=True)
     dob = models.CharField(max_length=100, blank=True, null=True)
