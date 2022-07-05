@@ -75,7 +75,6 @@ def single_certificate_gen(name):
         generated_certificate_path = certificate_upload_url + certificate_name
         return generated_certificate_path
 
-
 def pillow(name_ls):
    # MAIN CODE FOR GENERTING CERTIFICATES
     def certificate_gen(name_ls):
@@ -127,29 +126,3 @@ def cv_2(name_ls):
       cv2.imwrite("result/cv2/{}.jpg".format(name.strip()),template)
       print("{}'s certificate generated using Open cv".format(name))
       
-# if __name__=="__main__":
-#     clean()
-
-#     print('Do you want to convert contents of a text file to a list or a csv file?\n1.names.txt\n2.names.csv')
-#     choice=int(input("Enter your choice: as (1) or (2): "))
-#     if(choice) == 1:
-#         try:
-#             name_ls=open_textfile()
-#         except:
-#             print("Error in opening the file")
-#     else:
-#         try:
-#             df = pd.read_csv('names.csv')
-#             name_ls = df['NAMES'].tolist()
-#         except:
-#             print("File not found")
-#             exit()
-#     print("Enter you're mode of generation \n1.PIllow\n2.OpenCV")
-#     choice=int(input("Enter your choice: as (1) or (2): "))
-#     if(choice)==1:
-#         pillow(name_ls)
-#     else:
-#         cv_2(name_ls)
-    
-# myname = 'munyaradzi tapuwanashe'
-# single_certificate_gen(myname)
