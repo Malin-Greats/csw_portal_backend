@@ -29,8 +29,6 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         token = super().get_token(user)
         member = MemberProfile.objects.get(user=user)
         token['username'] = user.username
-
-        
         token['user_id'] = user.id
         token['member_number'] = member.member_number
         token['is_staff'] = user.is_staff
